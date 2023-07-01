@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: BlueTank
+  m_EditorClassIdentifier: Assembly-CSharp::TankScriptableObject
+  health: 200
+  speed: 5
+  bulletType: 0
+  tankView: {fileID: 1334481391133358749, guid: cddab1e8bfd34a442bf5e6ee169cd462,
+    type: 3}

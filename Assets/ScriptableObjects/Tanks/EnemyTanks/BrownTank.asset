@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: BrownTank
+  m_EditorClassIdentifier: Assembly-CSharp::TankScriptableObject
+  health: 200
+  speed: 5
+  damage: 80
+  tankView: {fileID: 1138508047564192740, guid: 5f7947cb06c8e664e8e35a590e5973dd,
+    type: 3}

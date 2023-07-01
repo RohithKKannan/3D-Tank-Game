@@ -5,22 +5,33 @@ public enum TankType
 }
 public class TankService : GenericSingleton<TankService>
 {
+    [SerializeField] TankScriptableObjectList playerTankList;
+    [SerializeField] TankScriptableObjectList enemyTankList;
     [SerializeField] int enemyCount = 2;
-    [SerializeField] TankView tankPrefab;
     [SerializeField] FixedJoystick joystick;
     [SerializeField] CameraController mainCamera;
     void Start()
     {
-        CreatePlayerTank();
+        CreatePlayerTank(Random.Range(0, playerTankList.tanks.Length));
         for (int i = 0; i < enemyCount; i++)
-            CreateEnemyTank();
+            CreateEnemyTank(Random.Range(0, enemyTankList.tanks.Length));
     }
-    public void CreatePlayerTank()
+    public void CreatePlayerTank(int index)
     {
-        TankController tankController = new TankController(tankPrefab, 10, 100, TankType.Player, joystick, mainCamera);
+        TankScriptableObject tank = playerTankList.tanks[index];
+        TankController tankController = new TankController(tank, TankType.Player, joystick, mainCamera);
     }
-    public void CreateEnemyTank()
+    public void CreateEnemyTank(int index)
     {
-        TankController tankController = new TankController(tankPrefab, 5, 100, TankType.Enemy, null, null, 10, 4);
+        TankScriptableObject tank = enemyTankList.tanks[index];
+        TankController tankController = new TankController(tank, TankType.Enemy, null, null, 10, 4);
+    }
+    public void ShootBullet(BulletType bulletType, Transform tankTransform)
+    {
+        BulletService.Instance.SpawnBullet(bulletType, tankTransform);
+    }
+    public void DestoryTank(TankView tankView)
+    {
+        Destroy(tankView.gameObject);
     }
 }
