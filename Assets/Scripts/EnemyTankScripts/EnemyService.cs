@@ -9,6 +9,11 @@ using BattleTank.Bullet;
 
 namespace BattleTank.Enemy
 {
+    public enum EnemyType
+    {
+        Brown, Purple, Cyan
+    }
+
     public class EnemyService : GenericSingleton<EnemyService>
     {
         private int maxEnemyCount = 10;
@@ -17,6 +22,10 @@ namespace BattleTank.Enemy
         private List<EnemyController> enemies;
         private List<Transform> spawnPoints;
         private List<Transform> pointsAlreadySpawned;
+
+        private BrownEnemyPoolService brownEnemyPoolService;
+        private PurpleEnemyPoolService purpleEnemyPoolService;
+        private CyanEnemyPoolService cyanEnemyPoolService;
 
         private TankExplosionPoolService tankExplosionPoolService;
 
@@ -30,9 +39,12 @@ namespace BattleTank.Enemy
             enemies = new List<EnemyController>();
             spawnPoints = new List<Transform>();
             pointsAlreadySpawned = new List<Transform>();
+            brownEnemyPoolService = new BrownEnemyPoolService();
+            purpleEnemyPoolService = new PurpleEnemyPoolService();
+            cyanEnemyPoolService = new CyanEnemyPoolService();
             tankExplosionPoolService = new TankExplosionPoolService();
-            playerTransform = TankService.Instance.GetPlayerTransform();
 
+            playerTransform = TankService.Instance.GetPlayerTransform();
             enemyCount = Mathf.Min(enemyCount, maxEnemyCount);
 
             foreach (Transform item in SpawnPointParent)
@@ -46,7 +58,7 @@ namespace BattleTank.Enemy
             yield return new WaitForSeconds(2f);
 
             Vector3 newPosition = GetExistingSpawnPoint();
-            int enemyType = GetRandomEnemyType();
+            EnemyType enemyType = GetRandomEnemyType();
 
             if (newPosition == Vector3.zero)
                 yield break;
@@ -60,7 +72,7 @@ namespace BattleTank.Enemy
             for (int i = 0; i < count; i++)
             {
                 Vector3 newPosition = GetRandomSpawnPoint();
-                int enemyType = GetRandomEnemyType();
+                EnemyType enemyType = GetRandomEnemyType();
 
                 if (newPosition == Vector3.zero)
                     break;
@@ -104,15 +116,32 @@ namespace BattleTank.Enemy
             return newSpawnPoint.position;
         }
 
-        public int GetRandomEnemyType()
+        public EnemyType GetRandomEnemyType()
         {
-            return UnityEngine.Random.Range(0, enemyTankList.enemies.Length);
+            return (EnemyType)UnityEngine.Random.Range(0, enemyTankList.enemies.Length);
         }
 
-        public EnemyController CreateEnemyTank(int enemyTypeIndex, Vector3 newPosition)
+        public EnemyController CreateEnemyTank(EnemyType enemyType, Vector3 newPosition)
         {
-            EnemyScriptableObject enemyData = enemyTankList.enemies[enemyTypeIndex];
-            EnemyController enemyController = new EnemyController(enemyData, newPosition, playerTransform);
+            EnemyScriptableObject enemyData = enemyTankList.enemies[(int)enemyType];
+
+            EnemyController enemyController = null;
+
+            switch (enemyType)
+            {
+                case EnemyType.Brown:
+                    enemyController = brownEnemyPoolService.GetEnemy(enemyData, enemyType);
+                    break;
+                case EnemyType.Purple:
+                    enemyController = purpleEnemyPoolService.GetEnemy(enemyData, enemyType);
+                    break;
+                case EnemyType.Cyan:
+                    enemyController = cyanEnemyPoolService.GetEnemy(enemyData, enemyType);
+                    break;
+                default: break;
+            }
+
+            enemyController.EnableEnemyTank(playerTransform, newPosition);
 
             return enemyController;
         }
@@ -122,15 +151,29 @@ namespace BattleTank.Enemy
             BulletService.Instance.SpawnBullet(bulletType, gunTransform, TankType.Enemy);
         }
 
-        public void DestoryEnemy(EnemyController _enemyController)
+        public void DestoryEnemy(EnemyController _enemyController, EnemyType _enemyType)
         {
             Vector3 pos = _enemyController.GetPosition();
+            _enemyController.DisableEnemyTank();
 
-            GameObject.Destroy(_enemyController.enemyView.gameObject);
+            switch (_enemyType)
+            {
+                case EnemyType.Brown:
+                    brownEnemyPoolService.ReturnItem(_enemyController);
+                    break;
+                case EnemyType.Purple:
+                    purpleEnemyPoolService.ReturnItem(_enemyController);
+                    break;
+                case EnemyType.Cyan:
+                    cyanEnemyPoolService.ReturnItem(_enemyController);
+                    break;
+            }
+
             enemies.Remove(_enemyController);
             StartCoroutine(TankExplosion(pos));
 
-            StartCoroutine(SpawnEnemyTank());
+            if (playerTransform != null)
+                StartCoroutine(SpawnEnemyTank());
         }
 
         public IEnumerator TankExplosion(Vector3 tankPos)
@@ -154,7 +197,7 @@ namespace BattleTank.Enemy
 
             foreach (EnemyController enemy in enemyList)
             {
-                DestoryEnemy(enemy);
+                DestoryEnemy(enemy, enemy.GetEnemyType());
                 yield return new WaitForSeconds(1f);
             }
         }

@@ -8,19 +8,18 @@ namespace BattleTank.Enemy
         public EnemyModel enemyModel { get; }
         public EnemyView enemyView { get; }
 
-        private Transform playerTransform;
         private int health;
+        private Transform playerTransform;
 
-        public EnemyController(EnemyScriptableObject enemyData, Vector3 randomPosition, Transform playerTransform)
+        public EnemyController(EnemyScriptableObject enemyData, EnemyType enemyType)
         {
-            enemyView = GameObject.Instantiate<EnemyView>(enemyData.enemyView, randomPosition, Quaternion.Euler(0, Random.Range(0, 360), 0));
-            enemyModel = new EnemyModel(enemyData);
+            enemyView = GameObject.Instantiate<EnemyView>(enemyData.enemyView);
+            enemyModel = new EnemyModel(enemyData, enemyType);
 
             enemyView.SetEnemyController(this);
             enemyModel.SetEnemyController(this);
 
             health = enemyModel.health;
-            this.playerTransform = playerTransform;
         }
 
         public int GetStrength()
@@ -63,6 +62,11 @@ namespace BattleTank.Enemy
             return playerTransform;
         }
 
+        public EnemyType GetEnemyType()
+        {
+            return enemyModel.enemyType;
+        }
+
         public void Shoot(Transform gunTransform)
         {
             EnemyService.Instance.ShootBullet(enemyModel.bulletType, gunTransform);
@@ -71,13 +75,27 @@ namespace BattleTank.Enemy
         public void TakeDamage(int damage)
         {
             health -= damage;
-            if (health < 0)
+            if (health <= 0)
                 EnemyDeath();
         }
 
         private void EnemyDeath()
         {
-            EnemyService.Instance.DestoryEnemy(this);
+            EnemyService.Instance.DestoryEnemy(this, enemyModel.enemyType);
+        }
+
+        public void EnableEnemyTank(Transform _playerTransform, Vector3 _newPosition)
+        {
+            playerTransform = _playerTransform;
+            enemyView.transform.position = _newPosition;
+            enemyView.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
+
+            enemyView.gameObject.SetActive(true);
+        }
+
+        public void DisableEnemyTank()
+        {
+            enemyView.gameObject.SetActive(false);
         }
     }
 }
