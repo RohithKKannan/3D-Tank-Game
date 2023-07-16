@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BulletScriptableObject
   damage: 25
   range: 35
-  bulletView: {fileID: 8398489244869190324, guid: 76c454c079094e443b21d6c1009d6673,
+  bulletView: {fileID: 7206883961965564179, guid: d138d3ca2ced1264d9eb0239aa7aeaa7,
     type: 3}

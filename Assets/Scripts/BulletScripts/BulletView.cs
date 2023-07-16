@@ -1,4 +1,5 @@
 using UnityEngine;
+using BattleTank.PlayerTank;
 
 namespace BattleTank.Bullet
 {
@@ -6,12 +7,7 @@ namespace BattleTank.Bullet
     {
         private BulletController bulletController;
 
-        [SerializeField] Rigidbody rb;
-
-        void Start()
-        {
-            bulletController.Shoot();
-        }
+        [SerializeField] private Rigidbody rb;
 
         public void SetBulletController(BulletController _bulletController)
         {
@@ -28,15 +24,13 @@ namespace BattleTank.Bullet
             return rb;
         }
 
-        void OnCollisionEnter(Collision col)
+        private void OnCollisionEnter(Collision col)
         {
             bulletController.BulletCollision(col.contacts[0].point);
 
             IDamageable target = col.gameObject.GetComponent<IDamageable>();
             if (target != null)
-            {
                 target.TakeDamage(bulletController.GetBulletDamage(), bulletController.GetTankType());
-            }
         }
     }
 }

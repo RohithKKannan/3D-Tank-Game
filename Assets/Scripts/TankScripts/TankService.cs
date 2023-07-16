@@ -34,10 +34,10 @@ namespace BattleTank.PlayerTank
             tankController = new TankController(tank, joystick, mainCamera);
         }
 
-        public void ShootBullet(BulletType bulletType, Transform tankTransform)
+        public void ShootBullet(BulletType bulletType, Transform gunTransform)
         {
             EventService.Instance.InvokePlayerFiredBullet();
-            BulletService.Instance.SpawnBullet(bulletType, tankTransform, TankType.Player);
+            BulletService.Instance.SpawnBullet(bulletType, gunTransform, TankType.Player);
         }
 
         public void DestoryTank(TankView tankView)

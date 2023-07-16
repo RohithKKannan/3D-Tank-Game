@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 namespace BattleTank.Generics
 {
-    public class GenericObjectPool<T> : GenericSingleton<GenericObjectPool<T>> where T : class
+    public class GenericObjectPool<T> : NonMonoGenericSingleton<GenericObjectPool<T>> where T : class
     {
-        private List<PooledItem<T>> pooledItems;
+        private List<PooledItem<T>> pooledItems = new List<PooledItem<T>>();
 
         public virtual T GetItem()
         {
@@ -32,7 +32,7 @@ namespace BattleTank.Generics
                 pooledItem.isUsed = false;
         }
 
-        public T CreateItem()
+        protected virtual T CreateItem()
         {
             return (T)null;
         }

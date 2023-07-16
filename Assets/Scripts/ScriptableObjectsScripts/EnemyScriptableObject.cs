@@ -1,5 +1,6 @@
-using BattleTank.Enemy;
 using UnityEngine;
+using BattleTank.Enemy;
+using BattleTank.Bullet;
 
 namespace BattleTank.ScriptableObjects
 {
