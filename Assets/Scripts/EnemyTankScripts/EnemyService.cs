@@ -41,6 +41,20 @@ namespace BattleTank.Enemy
             StartCoroutine(SpawnEnemyTanks(enemyCount));
         }
 
+        IEnumerator SpawnEnemyTank()
+        {
+            yield return new WaitForSeconds(2f);
+
+            Vector3 newPosition = GetExistingSpawnPoint();
+            int enemyType = GetRandomEnemyType();
+
+            if (newPosition == Vector3.zero)
+                yield break;
+
+            EnemyController enemyController = CreateEnemyTank(enemyType, newPosition);
+            enemies.Add(enemyController);
+        }
+
         IEnumerator SpawnEnemyTanks(int count)
         {
             for (int i = 0; i < count; i++)
@@ -56,6 +70,24 @@ namespace BattleTank.Enemy
 
                 yield return new WaitForSeconds(0.1f);
             }
+        }
+
+        public Vector3 GetExistingSpawnPoint()
+        {
+            if (pointsAlreadySpawned.Count == 0)
+                return Vector3.zero;
+
+            int spawnPointIndex;
+            Transform newSpawnPoint;
+
+            do
+            {
+                spawnPointIndex = UnityEngine.Random.Range(0, pointsAlreadySpawned.Count);
+                newSpawnPoint = pointsAlreadySpawned[spawnPointIndex];
+            }
+            while (Vector3.Distance(newSpawnPoint.position, playerTransform.position) < 10f);
+
+            return newSpawnPoint.position;
         }
 
         public Vector3 GetRandomSpawnPoint()
@@ -97,6 +129,8 @@ namespace BattleTank.Enemy
             GameObject.Destroy(_enemyController.enemyView.gameObject);
             enemies.Remove(_enemyController);
             StartCoroutine(TankExplosion(pos));
+
+            StartCoroutine(SpawnEnemyTank());
         }
 
         public IEnumerator TankExplosion(Vector3 tankPos)
