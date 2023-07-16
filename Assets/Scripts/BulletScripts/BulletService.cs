@@ -2,6 +2,7 @@ using UnityEngine;
 using BattleTank.Generics;
 using BattleTank.ScriptableObjects;
 using BattleTank.ObjectPool;
+using System.Collections;
 
 namespace BattleTank.Bullet
 {
@@ -15,6 +16,7 @@ namespace BattleTank.Bullet
         SniperBulletPoolService sniperBulletPoolService;
         AssaultBulletPoolService assaultBulletPoolService;
         PistolBulletPoolService pistolBulletPoolService;
+        BulletExplosionPoolService bulletExplosionPoolService;
 
         [SerializeField] private BulletScriptableObjectList bulletList;
         [SerializeField] private ParticleSystem bulletExplosion;
@@ -24,6 +26,7 @@ namespace BattleTank.Bullet
             sniperBulletPoolService = new SniperBulletPoolService();
             assaultBulletPoolService = new AssaultBulletPoolService();
             pistolBulletPoolService = new PistolBulletPoolService();
+            bulletExplosionPoolService = new BulletExplosionPoolService();
         }
 
         public void SpawnBullet(BulletType bulletType, Transform _transform, TankType tankType)
@@ -54,8 +57,7 @@ namespace BattleTank.Bullet
 
         public void BulletExplosion(BulletController bulletController, Vector3 position, BulletView bulletView, BulletType bulletType)
         {
-            ParticleSystem explosion = GameObject.Instantiate<ParticleSystem>(bulletExplosion, position, Quaternion.identity);
-            explosion.Play();
+            StartCoroutine(PlayExplosionEffect(position));
 
             bulletController.DisableBullet();
             switch (bulletType)
@@ -71,6 +73,25 @@ namespace BattleTank.Bullet
                     break;
                 default: break;
             }
+        }
+
+        private IEnumerator PlayExplosionEffect(Vector3 position)
+        {
+            ParticleSystem explosion = bulletExplosionPoolService.GetExplosion(bulletExplosion);
+
+            explosion.transform.position = position;
+            explosion.gameObject.SetActive(true);
+            explosion.Play();
+
+            yield return new WaitForSeconds(2f);
+            EndExplosionEffect(explosion);
+        }
+
+        private void EndExplosionEffect(ParticleSystem explosion)
+        {
+            explosion.gameObject.SetActive(false);
+
+            bulletExplosionPoolService.ReturnItem(explosion);
         }
     }
 }

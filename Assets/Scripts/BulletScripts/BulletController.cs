@@ -28,12 +28,12 @@ namespace BattleTank.Bullet
         public void Shoot()
         {
             rb.AddForce(rb.transform.forward * bulletModel.range, ForceMode.Impulse);
-            Debug.Log(rb.velocity);
         }
 
         public void BulletCollision(Vector3 position)
         {
             rb.rotation = Quaternion.identity;
+
             BulletService.Instance.BulletExplosion(this, position, bulletView, bulletModel.bulletType);
         }
 
@@ -54,8 +54,6 @@ namespace BattleTank.Bullet
             rb.transform.position = gunTransform.position;
             rb.transform.rotation = gunTransform.rotation;
 
-            Debug.Log(rb.transform.position);
-
             rb.gameObject.SetActive(true);
             Shoot();
         }
@@ -65,6 +63,7 @@ namespace BattleTank.Bullet
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             rb.rotation = Quaternion.identity;
+
             rb.gameObject.SetActive(false);
         }
     }

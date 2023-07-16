@@ -20,7 +20,7 @@ namespace BattleTank.Generics
 
             PooledItem<T> newPoolItem = new PooledItem<T>();
             newPoolItem.item = CreateItem();
-            newPoolItem.isUsed = false;
+            newPoolItem.isUsed = true;
             pooledItems.Add(newPoolItem);
             return newPoolItem.item;
         }
