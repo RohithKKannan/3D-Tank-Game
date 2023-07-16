@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using BattleTank.Generics;
+using BattleTank.ObjectPool;
 using BattleTank.Enemy;
 using BattleTank.PlayerCamera;
 
@@ -8,9 +9,16 @@ namespace BattleTank.Level
 {
     public class LevelService : GenericSingleton<LevelService>
     {
+        private TankExplosionPoolService explosionPoolService;
+
         [SerializeField] private GameObject[] entities;
         [SerializeField] private ParticleSystem explosionEffect;
         [SerializeField] private CameraController cameraController;
+
+        private void Start()
+        {
+            explosionPoolService = new TankExplosionPoolService();
+        }
 
         public IEnumerator DestroyLevel()
         {
@@ -43,18 +51,22 @@ namespace BattleTank.Level
                 Destroy(item.gameObject);
                 StartCoroutine(ExplosionEffect(pos));
 
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(1f);
             }
         }
 
         public IEnumerator ExplosionEffect(Vector3 pos)
         {
-            ParticleSystem particleSystem = GameObject.Instantiate<ParticleSystem>(explosionEffect, pos, Quaternion.identity);
+            ParticleSystem newExplosionEffect = explosionPoolService.GetExplosion(explosionEffect);
 
-            particleSystem.Play();
-            yield return new WaitForSeconds(2f);
+            newExplosionEffect.transform.position = pos;
+            newExplosionEffect.gameObject.SetActive(true);
+            newExplosionEffect.Play();
 
-            Destroy(particleSystem.gameObject);
+            yield return new WaitForSeconds(1.5f);
+
+            newExplosionEffect.gameObject.SetActive(false);
+            explosionPoolService.ReturnItem(newExplosionEffect);
         }
     }
 }

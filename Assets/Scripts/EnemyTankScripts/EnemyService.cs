@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BattleTank.Generics;
+using BattleTank.ObjectPool;
 using BattleTank.ScriptableObjects;
 using BattleTank.PlayerTank;
 using BattleTank.Bullet;
@@ -17,6 +18,8 @@ namespace BattleTank.Enemy
         private List<Transform> spawnPoints;
         private List<Transform> pointsAlreadySpawned;
 
+        private TankExplosionPoolService tankExplosionPoolService;
+
         [SerializeField] private EnemyScriptableObjectList enemyTankList;
         [SerializeField] private ParticleSystem tankExplosion;
         [SerializeField] private Transform SpawnPointParent;
@@ -27,6 +30,7 @@ namespace BattleTank.Enemy
             enemies = new List<EnemyController>();
             spawnPoints = new List<Transform>();
             pointsAlreadySpawned = new List<Transform>();
+            tankExplosionPoolService = new TankExplosionPoolService();
             playerTransform = TankService.Instance.GetPlayerTransform();
 
             enemyCount = Mathf.Min(enemyCount, maxEnemyCount);
@@ -97,12 +101,15 @@ namespace BattleTank.Enemy
 
         public IEnumerator TankExplosion(Vector3 tankPos)
         {
-            ParticleSystem newTankExplosion = GameObject.Instantiate<ParticleSystem>(tankExplosion, tankPos, Quaternion.identity);
-
+            ParticleSystem newTankExplosion = tankExplosionPoolService.GetExplosion(tankExplosion);
+            newTankExplosion.transform.position = tankPos;
+            newTankExplosion.gameObject.SetActive(true);
             newTankExplosion.Play();
+
             yield return new WaitForSeconds(2f);
 
-            Destroy(newTankExplosion.gameObject);
+            newTankExplosion.gameObject.SetActive(false);
+            tankExplosionPoolService.ReturnItem(newTankExplosion);
         }
 
         public IEnumerator DestroyAllEnemies()

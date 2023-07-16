@@ -84,13 +84,8 @@ namespace BattleTank.Bullet
             explosion.Play();
 
             yield return new WaitForSeconds(2f);
-            EndExplosionEffect(explosion);
-        }
 
-        private void EndExplosionEffect(ParticleSystem explosion)
-        {
             explosion.gameObject.SetActive(false);
-
             bulletExplosionPoolService.ReturnItem(explosion);
         }
     }
