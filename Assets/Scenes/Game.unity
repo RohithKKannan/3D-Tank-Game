@@ -601,6 +601,7 @@ MonoBehaviour:
   joystick: {fileID: 2110804881}
   mainCamera: {fileID: 1771596988}
   tankExplosion: {fileID: 19874418, guid: ee49a9a8678ecf8468eb488e1ac8d42b, type: 3}
+  distanceCheckpoints: 0a0000003200000064000000
 --- !u!4 &857600325
 Transform:
   m_ObjectHideFlags: 0
@@ -2263,6 +2264,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   achievementPrefab: {fileID: 2995821417583392519, guid: d1815b24846eb76488a75cbfeed7b5ee,
     type: 3}
+  bulletCheckpoints: 0a0000001900000032000000
+  enemiesDestroyedCheckpoints: 050000000f0000001e000000
 --- !u!1001 &1981081511
 PrefabInstance:
   m_ObjectHideFlags: 0

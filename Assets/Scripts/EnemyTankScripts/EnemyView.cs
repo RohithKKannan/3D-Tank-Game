@@ -73,7 +73,10 @@ namespace BattleTank.Enemy
         public void TakeDamage(int damage, TankType tankType)
         {
             if (tankType == TankType.Player)
+            {
+                Debug.Log("Damage received : " + damage);
                 enemyController.TakeDamage(damage);
+            }
         }
 
         public void EnemyShootBullet()

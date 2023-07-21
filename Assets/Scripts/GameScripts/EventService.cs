@@ -16,18 +16,18 @@ namespace BattleTank.Events
             }
         }
 
-        public event Action OnEnemyDestroy;
-        public event Action OnPlayerFiredBullet;
+        public event Action<int> OnEnemyDestroy;
+        public event Action<int> OnPlayerFiredBullet;
         public event Action<float> OnDistanceTravelled;
 
-        public void InvokeEnemyDestroy()
+        public void InvokeEnemyDestroy(int enemiesDestroyedCount)
         {
-            OnEnemyDestroy?.Invoke();
+            OnEnemyDestroy?.Invoke(enemiesDestroyedCount);
         }
 
-        public void InvokePlayerFiredBullet()
+        public void InvokePlayerFiredBullet(int bulletCount)
         {
-            OnPlayerFiredBullet?.Invoke();
+            OnPlayerFiredBullet?.Invoke(bulletCount);
         }
 
         public void InvokeDistanceTravelled(float distance)

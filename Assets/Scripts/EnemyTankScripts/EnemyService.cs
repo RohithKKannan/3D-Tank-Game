@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BattleTank.Generics;
 using BattleTank.ObjectPool;
+using BattleTank.Events;
 using BattleTank.ScriptableObjects;
 using BattleTank.PlayerTank;
 using BattleTank.Bullet;
@@ -17,6 +18,7 @@ namespace BattleTank.Enemy
     public class EnemyService : GenericSingleton<EnemyService>
     {
         private int maxEnemyCount = 10;
+        private int enemiesDestroyedCount = 0;
         private Transform playerTransform;
 
         private List<EnemyController> enemies;
@@ -170,6 +172,7 @@ namespace BattleTank.Enemy
             }
 
             enemies.Remove(_enemyController);
+            EventService.Instance.InvokeEnemyDestroy(++enemiesDestroyedCount);
             StartCoroutine(TankExplosion(pos));
 
             if (playerTransform != null)

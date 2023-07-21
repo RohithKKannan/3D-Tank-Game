@@ -86,6 +86,7 @@ namespace BattleTank.Enemy
 
         public void EnableEnemyTank(Transform _playerTransform, Vector3 _newPosition)
         {
+            health = enemyModel.health;
             playerTransform = _playerTransform;
             enemyView.transform.position = _newPosition;
             enemyView.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
