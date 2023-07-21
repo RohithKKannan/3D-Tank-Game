@@ -1,4 +1,5 @@
 using UnityEngine;
+using BattleTank.PlayerCamera;
 public class TankController
 {
     public TankController(TankScriptableObject tank, FixedJoystick _joystick = null, CameraController cameraController = null)
@@ -41,5 +42,9 @@ public class TankController
     void TankDeath()
     {
         TankService.Instance.DestoryTank(tankView);
+    }
+    public Transform GetTransform()
+    {
+        return rb.transform;
     }
 }

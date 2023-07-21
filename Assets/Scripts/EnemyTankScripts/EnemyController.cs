@@ -1,41 +1,82 @@
 using UnityEngine;
-public class EnemyController
+
+namespace BattleTank.Enemy
 {
-    public EnemyController(EnemyScriptableObject enemy, float x = 0, float z = 0)
+    public class EnemyController
     {
-        enemyView = GameObject.Instantiate<EnemyView>(enemy.enemyView, new Vector3(Random.Range(-x, x), 0, Random.Range(-z, z)), Quaternion.identity);
-        enemyModel = new EnemyModel(enemy);
+        public EnemyModel enemyModel { get; }
+        public EnemyView enemyView { get; }
 
-        enemyView.SetEnemyController(this);
-        enemyModel.SetEnemyController(this);
+        private Transform playerTransform;
+        private int health;
 
-        rb = enemyView.GetRigidbody();
-        health = enemyModel.health;
-    }
-    public EnemyModel enemyModel { get; }
-    public EnemyView enemyView { get; }
-    private Rigidbody rb;
-    int health;
-    public void Shoot(Transform gunTransform)
-    {
-        EnemyService.Instance.ShootBullet(enemyModel.bulletType, gunTransform);
-    }
-    public void TakeDamage(int damage)
-    {
-        health -= damage;
-        if (health < 0)
-            TankDeath();
-    }
-    void TankDeath()
-    {
-        EnemyService.Instance.DestoryEnemy(this);
-    }
-    public int GetStrength()
-    {
-        return enemyModel.strength;
-    }
-    public Vector3 GetPosition()
-    {
-        return enemyView.transform.position;
+        public EnemyController(EnemyScriptableObject enemyData, Vector3 randomPosition, Transform playerTransform)
+        {
+            enemyView = GameObject.Instantiate<EnemyView>(enemyData.enemyView, randomPosition, Quaternion.Euler(0, Random.Range(0, 360), 0));
+            enemyModel = new EnemyModel(enemyData);
+
+            enemyView.SetEnemyController(this);
+            enemyModel.SetEnemyController(this);
+
+            health = enemyModel.health;
+            this.playerTransform = playerTransform;
+        }
+
+        public int GetStrength()
+        {
+            return enemyModel.strength;
+        }
+
+        public float GetVisibilityRange()
+        {
+            return enemyModel.visibilityRange;
+        }
+
+        public float GetDetectionRange()
+        {
+            return enemyModel.detectionRange;
+        }
+
+        public float GetBulletsPerMinute()
+        {
+            return enemyModel.bpm;
+        }
+
+        public float GetSpeed()
+        {
+            return enemyModel.speed;
+        }
+
+        public float GetRotationSpeed()
+        {
+            return enemyModel.rotationSpeed;
+        }
+
+        public Vector3 GetPosition()
+        {
+            return enemyView.transform.position;
+        }
+
+        public Transform GetPlayerTransform()
+        {
+            return playerTransform;
+        }
+
+        public void Shoot(Transform gunTransform)
+        {
+            EnemyService.Instance.ShootBullet(enemyModel.bulletType, gunTransform);
+        }
+
+        public void TakeDamage(int damage)
+        {
+            health -= damage;
+            if (health < 0)
+                EnemyDeath();
+        }
+
+        private void EnemyDeath()
+        {
+            EnemyService.Instance.DestoryEnemy(this);
+        }
     }
 }
