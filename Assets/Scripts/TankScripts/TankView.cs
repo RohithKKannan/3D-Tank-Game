@@ -1,5 +1,6 @@
 using UnityEngine;
 using BattleTank.Enemy;
+using BattleTank.Events;
 
 namespace BattleTank.PlayerTank
 {
@@ -14,6 +15,11 @@ namespace BattleTank.PlayerTank
         [SerializeField] private Transform gun;
         [SerializeField] private FixedJoystick joystick;
 
+        private void Start()
+        {
+            EventService.Instance.OnPlayerShoot += PlayerShootBullet;
+        }
+
         public void SetTankController(TankController _tankController)
         {
             tankController = _tankController;
@@ -27,6 +33,11 @@ namespace BattleTank.PlayerTank
         public Rigidbody GetRigidbody()
         {
             return rb;
+        }
+
+        private void PlayerShootBullet()
+        {
+            tankController.Shoot(gun);
         }
 
         void PlayerInput()
@@ -63,6 +74,11 @@ namespace BattleTank.PlayerTank
         {
             if (tankType == TankType.Enemy)
                 tankController.TakeDamage(damage);
+        }
+
+        private void OnDestroy()
+        {
+            EventService.Instance.OnPlayerShoot -= PlayerShootBullet;
         }
     }
 }

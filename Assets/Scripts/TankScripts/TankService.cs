@@ -33,7 +33,6 @@ namespace BattleTank.PlayerTank
 
         private void Start()
         {
-            Debug.Log("Length of distanceCheckpoints : " + distanceCheckpoints.Length);
             bulletCount = 0;
             tankExplosionPoolService = new TankExplosionPoolService();
             CreatePlayerTank(UnityEngine.Random.Range(0, playerTankList.tanks.Length));

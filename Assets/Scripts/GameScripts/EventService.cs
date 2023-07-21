@@ -19,6 +19,7 @@ namespace BattleTank.Events
         public event Action<int> OnEnemyDestroy;
         public event Action<int> OnPlayerFiredBullet;
         public event Action<float> OnDistanceTravelled;
+        public event Action OnPlayerShoot;
 
         public void InvokeEnemyDestroy(int enemiesDestroyedCount)
         {
@@ -33,6 +34,11 @@ namespace BattleTank.Events
         public void InvokeDistanceTravelled(float distance)
         {
             OnDistanceTravelled?.Invoke(distance);
+        }
+
+        public void InvokePlayerShoot()
+        {
+            OnPlayerShoot?.Invoke();
         }
     }
 }
