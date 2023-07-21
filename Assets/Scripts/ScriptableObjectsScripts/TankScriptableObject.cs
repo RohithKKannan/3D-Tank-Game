@@ -1,5 +1,6 @@
 using UnityEngine;
 using BattleTank.PlayerTank;
+using BattleTank.Bullet;
 
 namespace BattleTank.ScriptableObjects
 {

@@ -7,14 +7,20 @@ namespace BattleTank.Bullet
         public int damage { get; }
         public int range { get; }
         public TankType tankType { private set; get; }
+        public BulletType bulletType { private set; get; }
 
         private BulletController bulletController;
 
-        public BulletModel(BulletScriptableObject _bullet, TankType tankType)
+        public BulletModel(BulletScriptableObject _bullet, BulletType _bulletType)
         {
             damage = _bullet.damage;
             range = _bullet.range;
-            this.tankType = tankType;
+            bulletType = _bulletType;
+        }
+
+        public void SetTankType(TankType _tankType)
+        {
+            tankType = _tankType;
         }
 
         public void SetBulletController(BulletController _bulletController)

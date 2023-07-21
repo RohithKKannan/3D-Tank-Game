@@ -1,5 +1,4 @@
 using UnityEngine;
-using BattleTank.Generics;
 using BattleTank.ScriptableObjects;
 
 namespace BattleTank.Bullet
@@ -10,15 +9,20 @@ namespace BattleTank.Bullet
         private BulletView bulletView;
         private Rigidbody rb;
 
-        public BulletController(BulletScriptableObject _bullet, Transform _transform, TankType tankType)
+        public BulletController(BulletScriptableObject _bullet, BulletType _bulletType)
         {
-            bulletView = GameObject.Instantiate<BulletView>(_bullet.bulletView, _transform.position, _transform.rotation);
-            bulletModel = new BulletModel(_bullet, tankType);
+            bulletView = GameObject.Instantiate<BulletView>(_bullet.bulletView);
+            bulletModel = new BulletModel(_bullet, _bulletType);
 
             bulletView.SetBulletController(this);
             bulletModel.SetBulletController(this);
 
             rb = bulletView.GetRigidbody();
+        }
+
+        public void SetBulletTankType(TankType tankType)
+        {
+            bulletModel.SetTankType(tankType);
         }
 
         public void Shoot()
@@ -28,7 +32,9 @@ namespace BattleTank.Bullet
 
         public void BulletCollision(Vector3 position)
         {
-            BulletService.Instance.BulletExplosion(position, bulletView);
+            rb.rotation = Quaternion.identity;
+
+            BulletService.Instance.BulletExplosion(this, position, bulletView, bulletModel.bulletType);
         }
 
         public int GetBulletDamage()
@@ -39,6 +45,26 @@ namespace BattleTank.Bullet
         public TankType GetTankType()
         {
             return bulletModel.tankType;
+        }
+
+        public void EnableBullet(Transform gunTransform, TankType tankType)
+        {
+            SetBulletTankType(tankType);
+
+            rb.transform.position = gunTransform.position;
+            rb.transform.rotation = gunTransform.rotation;
+
+            rb.gameObject.SetActive(true);
+            Shoot();
+        }
+
+        public void DisableBullet()
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.rotation = Quaternion.identity;
+
+            rb.gameObject.SetActive(false);
         }
     }
 }

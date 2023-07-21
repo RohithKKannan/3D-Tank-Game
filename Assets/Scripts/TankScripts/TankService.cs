@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using BattleTank.Generics;
 using BattleTank.ScriptableObjects;
+using BattleTank.ObjectPool;
 using BattleTank.Events;
 using BattleTank.Level;
 using BattleTank.PlayerCamera;
@@ -17,6 +18,7 @@ namespace BattleTank.PlayerTank
     public class TankService : GenericSingleton<TankService>
     {
         private TankController tankController;
+        private TankExplosionPoolService tankExplosionPoolService;
 
         [SerializeField] private TankScriptableObjectList playerTankList;
         [SerializeField] private FixedJoystick joystick;
@@ -25,6 +27,7 @@ namespace BattleTank.PlayerTank
 
         private void Start()
         {
+            tankExplosionPoolService = new TankExplosionPoolService();
             CreatePlayerTank(UnityEngine.Random.Range(0, playerTankList.tanks.Length));
         }
 
@@ -34,10 +37,10 @@ namespace BattleTank.PlayerTank
             tankController = new TankController(tank, joystick, mainCamera);
         }
 
-        public void ShootBullet(BulletType bulletType, Transform tankTransform)
+        public void ShootBullet(BulletType bulletType, Transform gunTransform)
         {
             EventService.Instance.InvokePlayerFiredBullet();
-            BulletService.Instance.SpawnBullet(bulletType, tankTransform, TankType.Player);
+            BulletService.Instance.SpawnBullet(bulletType, gunTransform, TankType.Player);
         }
 
         public void DestoryTank(TankView tankView)
@@ -53,13 +56,15 @@ namespace BattleTank.PlayerTank
 
         public IEnumerator TankExplosion(Vector3 tankPos)
         {
-            ParticleSystem newTankExplosion = GameObject.Instantiate<ParticleSystem>(tankExplosion, tankPos, Quaternion.identity);
-
+            ParticleSystem newTankExplosion = tankExplosionPoolService.GetExplosion(tankExplosion);
+            newTankExplosion.transform.position = tankPos;
+            newTankExplosion.gameObject.SetActive(true);
             newTankExplosion.Play();
+
             yield return new WaitForSeconds(2f);
 
-            Destroy(newTankExplosion.gameObject);
-            yield return new WaitForSeconds(2f);
+            newTankExplosion.gameObject.SetActive(false);
+            tankExplosionPoolService.ReturnItem(newTankExplosion);
         }
 
         public Transform GetPlayerTransform()

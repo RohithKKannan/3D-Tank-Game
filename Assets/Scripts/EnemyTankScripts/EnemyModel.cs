@@ -1,4 +1,5 @@
 using BattleTank.ScriptableObjects;
+using BattleTank.Bullet;
 
 namespace BattleTank.Enemy
 {
@@ -16,8 +17,9 @@ namespace BattleTank.Enemy
         public float detectionRange { get; }
 
         public BulletType bulletType { get; }
+        public EnemyType enemyType { get; }
 
-        public EnemyModel(EnemyScriptableObject enemy)
+        public EnemyModel(EnemyScriptableObject enemy, EnemyType _enemyType)
         {
             health = enemy.health;
             speed = enemy.speed;
@@ -29,6 +31,7 @@ namespace BattleTank.Enemy
             detectionRange = enemy.detectionRange;
 
             bulletType = enemy.bulletType;
+            enemyType = _enemyType;
         }
 
         public void SetEnemyController(EnemyController _enemyController)
