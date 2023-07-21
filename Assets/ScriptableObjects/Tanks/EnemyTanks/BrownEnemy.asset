@@ -9,13 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 860a8cf9fa1729b40b101b5c638d7ac0, type: 3}
   m_Name: BrownEnemy
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyScriptableObject
+  m_EditorClassIdentifier: 
   health: 200
-  speed: 2
+  speed: 5
   strength: 50
   bpm: 12
+  rotationSpeed: 5
   visibilityRange: 10
   detectionRange: 20
   bulletType: 0

@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: e44b5eb576710d0448b6fea219c4434d, type: 3}
   m_Name: SniperBullet
   m_EditorClassIdentifier: Assembly-CSharp::BulletScriptableObject
-  roundsPerMinute: 10
   damage: 50
-  range: 35
+  range: 50
   bulletView: {fileID: 8398489244869190324, guid: 76c454c079094e443b21d6c1009d6673,
     type: 3}

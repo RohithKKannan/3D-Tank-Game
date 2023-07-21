@@ -1,30 +1,44 @@
 using UnityEngine;
+using BattleTank.Generics;
+using BattleTank.ScriptableObjects;
 
-public class BulletController
+namespace BattleTank.Bullet
 {
-    public BulletController(BulletScriptableObject _bullet, Transform _transform)
+    public class BulletController
     {
-        bulletView = GameObject.Instantiate<BulletView>(_bullet.bulletView, _transform.position, _transform.rotation);
-        bulletModel = new BulletModel(_bullet);
+        private BulletModel bulletModel;
+        private BulletView bulletView;
+        private Rigidbody rb;
 
-        bulletView.SetBulletController(this);
-        bulletModel.SetBulletController(this);
+        public BulletController(BulletScriptableObject _bullet, Transform _transform, TankType tankType)
+        {
+            bulletView = GameObject.Instantiate<BulletView>(_bullet.bulletView, _transform.position, _transform.rotation);
+            bulletModel = new BulletModel(_bullet, tankType);
 
-        rb = bulletView.GetRigidbody();
-    }
-    private BulletModel bulletModel;
-    private BulletView bulletView;
-    Rigidbody rb;
-    public void Shoot()
-    {
-        rb.AddForce(rb.transform.forward * bulletModel.range, ForceMode.Impulse);
-    }
-    public void BulletCollision(Vector3 position)
-    {
-        BulletService.Instance.BulletExplosion(position, bulletView);
-    }
-    public int GetBulletDamage()
-    {
-        return bulletModel.damage;
+            bulletView.SetBulletController(this);
+            bulletModel.SetBulletController(this);
+
+            rb = bulletView.GetRigidbody();
+        }
+
+        public void Shoot()
+        {
+            rb.AddForce(rb.transform.forward * bulletModel.range, ForceMode.Impulse);
+        }
+
+        public void BulletCollision(Vector3 position)
+        {
+            BulletService.Instance.BulletExplosion(position, bulletView);
+        }
+
+        public int GetBulletDamage()
+        {
+            return bulletModel.damage;
+        }
+
+        public TankType GetTankType()
+        {
+            return bulletModel.tankType;
+        }
     }
 }

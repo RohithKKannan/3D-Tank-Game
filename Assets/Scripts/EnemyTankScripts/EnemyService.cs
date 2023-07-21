@@ -1,6 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BattleTank.Generics;
+using BattleTank.ScriptableObjects;
+using BattleTank.PlayerTank;
+using BattleTank.Bullet;
 
 namespace BattleTank.Enemy
 {
@@ -8,6 +12,7 @@ namespace BattleTank.Enemy
     {
         private int maxEnemyCount = 10;
         private Transform playerTransform;
+
         private List<EnemyController> enemies;
         private List<Transform> spawnPoints;
         private List<Transform> pointsAlreadySpawned;
@@ -54,7 +59,7 @@ namespace BattleTank.Enemy
             if (spawnPoints.Count == 0)
                 return Vector3.zero;
 
-            int spawnPointIndex = Random.Range(0, spawnPoints.Count);
+            int spawnPointIndex = UnityEngine.Random.Range(0, spawnPoints.Count);
             Transform newSpawnPoint = spawnPoints[spawnPointIndex];
 
             pointsAlreadySpawned.Add(newSpawnPoint);
@@ -65,7 +70,7 @@ namespace BattleTank.Enemy
 
         public int GetRandomEnemyType()
         {
-            return Random.Range(0, enemyTankList.enemies.Length);
+            return UnityEngine.Random.Range(0, enemyTankList.enemies.Length);
         }
 
         public EnemyController CreateEnemyTank(int enemyTypeIndex, Vector3 newPosition)
@@ -78,14 +83,14 @@ namespace BattleTank.Enemy
 
         public void ShootBullet(BulletType bulletType, Transform gunTransform)
         {
-            BulletService.Instance.SpawnBullet(bulletType, gunTransform);
+            BulletService.Instance.SpawnBullet(bulletType, gunTransform, TankType.Enemy);
         }
 
         public void DestoryEnemy(EnemyController _enemyController)
         {
             Vector3 pos = _enemyController.GetPosition();
 
-            Destroy(_enemyController.enemyView.gameObject);
+            GameObject.Destroy(_enemyController.enemyView.gameObject);
             enemies.Remove(_enemyController);
             StartCoroutine(TankExplosion(pos));
         }
