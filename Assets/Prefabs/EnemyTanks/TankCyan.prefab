@@ -178,7 +178,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2772017591814687202}
   serializedVersion: 2
-  m_Mass: 15
+  m_Mass: 20
   m_Drag: 3
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -217,6 +217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8abfb4192159694094686839280206a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeToWait: 2
 --- !u!114 &2640399003829128144
 MonoBehaviour:
   m_ObjectHideFlags: 0

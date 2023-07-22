@@ -1,7 +1,7 @@
 using UnityEngine;
 using BattleTank.Events;
 
-public class ShootButtonScript : MonoBehaviour
+public class GameUIManager : MonoBehaviour
 {
     public void ShootFunc()
     {
