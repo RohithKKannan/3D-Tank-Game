@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using BattleTank.ScriptableObjects;
 
 namespace BattleTank.Enemy
@@ -10,8 +11,13 @@ namespace BattleTank.Enemy
 
         private int health;
         private Transform playerTransform;
+        private Transform enemyTransform;
 
-        public EnemyController(EnemyScriptableObject enemyData, EnemyType enemyType)
+        private Camera playerCamera;
+        private Canvas enemyCanvas;
+        private Slider healthBar;
+
+        public EnemyController(EnemyScriptableObject enemyData, EnemyType enemyType, Camera _playerCamera, Canvas _enemyCanvas)
         {
             enemyView = GameObject.Instantiate<EnemyView>(enemyData.enemyView);
             enemyModel = new EnemyModel(enemyData, enemyType);
@@ -20,6 +26,12 @@ namespace BattleTank.Enemy
             enemyModel.SetEnemyController(this);
 
             health = enemyModel.health;
+            playerCamera = _playerCamera;
+            enemyCanvas = _enemyCanvas;
+            healthBar = enemyView.GetHealthBar();
+            enemyTransform = enemyView.transform;
+
+            SetupHealthBar();
         }
 
         public int GetStrength()
@@ -87,6 +99,8 @@ namespace BattleTank.Enemy
         public void EnableEnemyTank(Transform _playerTransform, Vector3 _newPosition)
         {
             health = enemyModel.health;
+            healthBar.gameObject.SetActive(true);
+
             playerTransform = _playerTransform;
             enemyView.transform.position = _newPosition;
             enemyView.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
@@ -96,7 +110,19 @@ namespace BattleTank.Enemy
 
         public void DisableEnemyTank()
         {
+            healthBar.gameObject.SetActive(false);
             enemyView.gameObject.SetActive(false);
+        }
+
+        private void SetupHealthBar()
+        {
+            healthBar.transform.SetParent(enemyCanvas.transform, false);
+        }
+
+        public void UpdateHealthBar()
+        {
+            healthBar.transform.LookAt(healthBar.transform.position + playerCamera.transform.rotation * Vector3.back, playerCamera.transform.rotation * Vector3.up);
+            healthBar.transform.localPosition = new Vector3(enemyTransform.position.x, 9, enemyTransform.position.z);
         }
     }
 }

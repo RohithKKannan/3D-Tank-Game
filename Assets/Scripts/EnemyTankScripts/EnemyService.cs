@@ -31,6 +31,8 @@ namespace BattleTank.Enemy
 
         private TankExplosionPoolService tankExplosionPoolService;
 
+        [SerializeField] private Camera playerCamera;
+        [SerializeField] private Canvas enemyUICanvas;
         [SerializeField] private EnemyScriptableObjectList enemyTankList;
         [SerializeField] private ParticleSystem tankExplosion;
         [SerializeField] private Transform SpawnPointParent;
@@ -132,13 +134,13 @@ namespace BattleTank.Enemy
             switch (enemyType)
             {
                 case EnemyType.Brown:
-                    enemyController = brownEnemyPoolService.GetEnemy(enemyData, enemyType);
+                    enemyController = brownEnemyPoolService.GetEnemy(enemyData, enemyType, playerCamera, enemyUICanvas);
                     break;
                 case EnemyType.Purple:
-                    enemyController = purpleEnemyPoolService.GetEnemy(enemyData, enemyType);
+                    enemyController = purpleEnemyPoolService.GetEnemy(enemyData, enemyType, playerCamera, enemyUICanvas);
                     break;
                 case EnemyType.Cyan:
-                    enemyController = cyanEnemyPoolService.GetEnemy(enemyData, enemyType);
+                    enemyController = cyanEnemyPoolService.GetEnemy(enemyData, enemyType, playerCamera, enemyUICanvas);
                     break;
                 default: break;
             }
