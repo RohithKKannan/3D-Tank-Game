@@ -87,6 +87,9 @@ namespace BattleTank.Enemy
         public void TakeDamage(int damage)
         {
             health -= damage;
+
+            healthBar.value = health;
+
             if (health <= 0)
                 EnemyDeath();
         }
@@ -99,6 +102,7 @@ namespace BattleTank.Enemy
         public void EnableEnemyTank(Transform _playerTransform, Vector3 _newPosition)
         {
             health = enemyModel.health;
+            healthBar.value = enemyModel.health;
             healthBar.gameObject.SetActive(true);
 
             playerTransform = _playerTransform;
@@ -117,6 +121,7 @@ namespace BattleTank.Enemy
         private void SetupHealthBar()
         {
             healthBar.transform.SetParent(enemyCanvas.transform, false);
+            healthBar.maxValue = enemyModel.health;
         }
 
         public void UpdateHealthBar()

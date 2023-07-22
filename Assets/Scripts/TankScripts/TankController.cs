@@ -1,6 +1,7 @@
 using UnityEngine;
 using BattleTank.ScriptableObjects;
 using BattleTank.PlayerCamera;
+using BattleTank.Events;
 
 namespace BattleTank.PlayerTank
 {
@@ -29,6 +30,8 @@ namespace BattleTank.PlayerTank
 
             rb = tankView.GetRigidbody();
             health = tankModel.health;
+            EventService.Instance.InvokeSetMaxHealthBar(health);
+            EventService.Instance.InvokeSetPlayerHealthBar(health);
             oldPosition = rb.transform.position;
         }
 
@@ -61,7 +64,7 @@ namespace BattleTank.PlayerTank
         public void TakeDamage(int damage)
         {
             health -= damage;
-
+            EventService.Instance.InvokeSetPlayerHealthBar(health);
             if (health <= 0)
                 TankDeath();
         }
