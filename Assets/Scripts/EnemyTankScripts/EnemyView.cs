@@ -81,7 +81,6 @@ namespace BattleTank.Enemy
         {
             if (tankType == TankType.Player)
             {
-                Debug.Log("Damage received : " + damage);
                 enemyController.TakeDamage(damage);
             }
         }

@@ -96,6 +96,9 @@ namespace BattleTank.Enemy
             int spawnPointIndex;
             Transform newSpawnPoint;
 
+            if (!playerTransform)
+                return Vector3.zero;
+
             do
             {
                 spawnPointIndex = UnityEngine.Random.Range(0, pointsAlreadySpawned.Count);

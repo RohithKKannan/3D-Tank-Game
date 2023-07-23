@@ -71,6 +71,7 @@ namespace BattleTank.PlayerTank
 
         private void TankDeath()
         {
+            EventService.Instance.InvokeGameOver();
             TankService.Instance.DestoryTank(tankView);
         }
 

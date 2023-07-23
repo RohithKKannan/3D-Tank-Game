@@ -20,6 +20,7 @@ namespace BattleTank.Events
         public event Action<int> OnPlayerFiredBullet;
         public event Action<float> OnDistanceTravelled;
         public event Action OnPlayerShoot;
+        public event Action OnGameOver;
         public event Action<int> OnSetMaxHealthBar;
         public event Action<int> OnSetPlayerHealthBar;
 
@@ -41,6 +42,11 @@ namespace BattleTank.Events
         public void InvokePlayerShoot()
         {
             OnPlayerShoot?.Invoke();
+        }
+
+        public void InvokeGameOver()
+        {
+            OnGameOver?.Invoke();
         }
 
         public void InvokeSetMaxHealthBar(int maxHealth)
