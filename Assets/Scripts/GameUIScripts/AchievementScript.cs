@@ -6,6 +6,8 @@ namespace BattleTank.Achievement
 {
     public class AchievementScript : MonoBehaviour
     {
+        private Vector3 initialPosition = new Vector3(0, 270, 0);
+
         [SerializeField] private Animator animator;
         [SerializeField] private TMP_Text achievementMessage;
         [SerializeField] private float timeToDestroy = 6f;
@@ -13,7 +15,7 @@ namespace BattleTank.Achievement
         public void SetLocalTransform()
         {
             transform.localScale = Vector3.one;
-            transform.localPosition = new Vector3(0, 270, 0);
+            transform.localPosition = initialPosition;
         }
 
         public void SetMessage(string _message)

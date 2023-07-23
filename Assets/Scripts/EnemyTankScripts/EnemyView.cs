@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.AI;
 
 namespace BattleTank.Enemy
@@ -11,6 +12,7 @@ namespace BattleTank.Enemy
         [SerializeField] private Rigidbody rb;
         [SerializeField] private Transform gun;
         [SerializeField] private NavMeshAgent agent;
+        [SerializeField] private Slider healthBar;
 
         [SerializeField] public EnemyAttackState enemyAttackState;
         [SerializeField] public EnemyChaseState enemyChaseState;
@@ -38,6 +40,11 @@ namespace BattleTank.Enemy
         public NavMeshAgent GetAgent()
         {
             return agent;
+        }
+
+        public Slider GetHealthBar()
+        {
+            return healthBar;
         }
 
         public int GetEnemyStrength()
@@ -73,7 +80,9 @@ namespace BattleTank.Enemy
         public void TakeDamage(int damage, TankType tankType)
         {
             if (tankType == TankType.Player)
+            {
                 enemyController.TakeDamage(damage);
+            }
         }
 
         public void EnemyShootBullet()
@@ -104,6 +113,8 @@ namespace BattleTank.Enemy
         private void Update()
         {
             currentState.Tick();
+
+            enemyController.UpdateHealthBar();
         }
     }
 }

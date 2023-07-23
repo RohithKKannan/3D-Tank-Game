@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BattleTank.Generics;
 using BattleTank.ObjectPool;
+using BattleTank.Events;
 using BattleTank.ScriptableObjects;
 using BattleTank.PlayerTank;
 using BattleTank.Bullet;
@@ -17,6 +18,7 @@ namespace BattleTank.Enemy
     public class EnemyService : GenericSingleton<EnemyService>
     {
         private int maxEnemyCount = 10;
+        private int enemiesDestroyedCount = 0;
         private Transform playerTransform;
 
         private List<EnemyController> enemies;
@@ -29,6 +31,8 @@ namespace BattleTank.Enemy
 
         private TankExplosionPoolService tankExplosionPoolService;
 
+        [SerializeField] private Camera playerCamera;
+        [SerializeField] private Canvas enemyUICanvas;
         [SerializeField] private EnemyScriptableObjectList enemyTankList;
         [SerializeField] private ParticleSystem tankExplosion;
         [SerializeField] private Transform SpawnPointParent;
@@ -92,6 +96,9 @@ namespace BattleTank.Enemy
             int spawnPointIndex;
             Transform newSpawnPoint;
 
+            if (!playerTransform)
+                return Vector3.zero;
+
             do
             {
                 spawnPointIndex = UnityEngine.Random.Range(0, pointsAlreadySpawned.Count);
@@ -130,13 +137,13 @@ namespace BattleTank.Enemy
             switch (enemyType)
             {
                 case EnemyType.Brown:
-                    enemyController = brownEnemyPoolService.GetEnemy(enemyData, enemyType);
+                    enemyController = brownEnemyPoolService.GetEnemy(enemyData, enemyType, playerCamera, enemyUICanvas);
                     break;
                 case EnemyType.Purple:
-                    enemyController = purpleEnemyPoolService.GetEnemy(enemyData, enemyType);
+                    enemyController = purpleEnemyPoolService.GetEnemy(enemyData, enemyType, playerCamera, enemyUICanvas);
                     break;
                 case EnemyType.Cyan:
-                    enemyController = cyanEnemyPoolService.GetEnemy(enemyData, enemyType);
+                    enemyController = cyanEnemyPoolService.GetEnemy(enemyData, enemyType, playerCamera, enemyUICanvas);
                     break;
                 default: break;
             }
@@ -170,6 +177,7 @@ namespace BattleTank.Enemy
             }
 
             enemies.Remove(_enemyController);
+            EventService.Instance.InvokeEnemyDestroy(++enemiesDestroyedCount);
             StartCoroutine(TankExplosion(pos));
 
             if (playerTransform != null)

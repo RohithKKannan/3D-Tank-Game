@@ -5,44 +5,32 @@ namespace BattleTank.Achievement
 {
     public class AchievementManager : MonoBehaviour
     {
-        private int bulletCount;
-        private int enemiesDestroyedCount;
-
         [SerializeField] private AchievementScript achievementPrefab;
+        [SerializeField] private int[] bulletCheckpoints;
+        [SerializeField] private int[] enemiesDestroyedCheckpoints;
 
         void Start()
         {
-            bulletCount = 0;
-            enemiesDestroyedCount = 0;
-
             EventService.Instance.OnPlayerFiredBullet += PlayerBulletAchievement;
             EventService.Instance.OnDistanceTravelled += DistanceTravelledAchievement;
             EventService.Instance.OnEnemyDestroy += EnemyDeathAchievement;
         }
 
-        public void PlayerBulletAchievement()
+        public void PlayerBulletAchievement(int bulletCount)
         {
-            bulletCount++;
-
-            switch (bulletCount)
+            for (int i = 0; i < bulletCheckpoints.Length; i++)
             {
-                case 10: UnlockAchievement("10 Bullets fired!"); break;
-                case 25: UnlockAchievement("25 Bullets fired!"); break;
-                case 50: UnlockAchievement("50 Bullets fired!"); break;
-                default: break;
+                if (bulletCheckpoints[i] == bulletCount)
+                    UnlockAchievement($"{bulletCount} Bullets fired!");
             }
         }
 
-        public void EnemyDeathAchievement()
+        public void EnemyDeathAchievement(int enemiesDestroyedCount)
         {
-            enemiesDestroyedCount++;
-
-            switch (enemiesDestroyedCount)
+            for (int i = 0; i < enemiesDestroyedCheckpoints.Length; i++)
             {
-                case 1: UnlockAchievement("First enemy destroyed!"); break;
-                case 5: UnlockAchievement("Five enemies destroyed!"); break;
-                case 10: UnlockAchievement("Ten enemies destroyed!"); break;
-                default: break;
+                if (bulletCheckpoints[i] == enemiesDestroyedCount)
+                    UnlockAchievement($"{enemiesDestroyedCount} enemies destroyed!");
             }
         }
 
@@ -54,9 +42,11 @@ namespace BattleTank.Achievement
         public void UnlockAchievement(string _achievement)
         {
             AchievementScript newAchievement = Instantiate<AchievementScript>(achievementPrefab);
+
             newAchievement.transform.SetParent(this.transform);
             newAchievement.SetLocalTransform();
             newAchievement.SetMessage(_achievement);
+
             newAchievement.ShowcaseAchievement();
         }
 

@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using BattleTank.Generics;
 using BattleTank.ScriptableObjects;
 using BattleTank.ObjectPool;
@@ -17,6 +19,8 @@ namespace BattleTank.PlayerTank
 {
     public class TankService : GenericSingleton<TankService>
     {
+        private int bulletCount;
+        private List<int> distanceCheckpointsAchieved = new();
         private TankController tankController;
         private TankExplosionPoolService tankExplosionPoolService;
 
@@ -25,8 +29,12 @@ namespace BattleTank.PlayerTank
         [SerializeField] private CameraController mainCamera;
         [SerializeField] private ParticleSystem tankExplosion;
 
+        [Header("Distance achievement")]
+        [SerializeField] private int[] distanceCheckpoints;
+
         private void Start()
         {
+            bulletCount = 0;
             tankExplosionPoolService = new TankExplosionPoolService();
             CreatePlayerTank(UnityEngine.Random.Range(0, playerTankList.tanks.Length));
         }
@@ -39,7 +47,8 @@ namespace BattleTank.PlayerTank
 
         public void ShootBullet(BulletType bulletType, Transform gunTransform)
         {
-            EventService.Instance.InvokePlayerFiredBullet();
+            bulletCount++;
+            EventService.Instance.InvokePlayerFiredBullet(bulletCount);
             BulletService.Instance.SpawnBullet(bulletType, gunTransform, TankType.Player);
         }
 
@@ -74,7 +83,15 @@ namespace BattleTank.PlayerTank
 
         public void distanceTravelled(float distance)
         {
-            EventService.Instance.InvokeDistanceTravelled(distance);
+            for (int i = distanceCheckpoints.Length - 1; i >= 0; i--)
+            {
+                if (distance > distanceCheckpoints[i] && !distanceCheckpointsAchieved.Contains(distanceCheckpoints[i]))
+                {
+                    EventService.Instance.InvokeDistanceTravelled(distanceCheckpoints[i]);
+                    distanceCheckpointsAchieved.Add(distanceCheckpoints[i]);
+                    return;
+                }
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 using UnityEngine;
 using BattleTank.ScriptableObjects;
 using BattleTank.PlayerCamera;
+using BattleTank.Events;
 
 namespace BattleTank.PlayerTank
 {
@@ -17,10 +18,6 @@ namespace BattleTank.PlayerTank
         private float totalDistanceTravelled;
         private float currentDistance;
 
-        private bool TenMeterMark = false;
-        private bool FiftyMeterMark = false;
-        private bool TwoHundredMeterMark = false;
-
         public TankController(TankScriptableObject tank, FixedJoystick _joystick, CameraController cameraController)
         {
             tankView = GameObject.Instantiate<TankView>(tank.tankView);
@@ -33,6 +30,8 @@ namespace BattleTank.PlayerTank
 
             rb = tankView.GetRigidbody();
             health = tankModel.health;
+            EventService.Instance.InvokeSetMaxHealthBar(health);
+            EventService.Instance.InvokeSetPlayerHealthBar(health);
             oldPosition = rb.transform.position;
         }
 
@@ -54,21 +53,7 @@ namespace BattleTank.PlayerTank
             totalDistanceTravelled += currentDistance;
             oldPosition = rb.transform.position;
 
-            if (!TenMeterMark && totalDistanceTravelled > 10f)
-            {
-                TankService.Instance.distanceTravelled(10f);
-                TenMeterMark = true;
-            }
-            else if (!FiftyMeterMark && totalDistanceTravelled > 50f)
-            {
-                TankService.Instance.distanceTravelled(50f);
-                FiftyMeterMark = true;
-            }
-            else if (!TwoHundredMeterMark && totalDistanceTravelled > 200f)
-            {
-                TankService.Instance.distanceTravelled(200f);
-                TwoHundredMeterMark = true;
-            }
+            TankService.Instance.distanceTravelled(totalDistanceTravelled);
         }
 
         public void Shoot(Transform gunTransform)
@@ -79,13 +64,14 @@ namespace BattleTank.PlayerTank
         public void TakeDamage(int damage)
         {
             health -= damage;
-
+            EventService.Instance.InvokeSetPlayerHealthBar(health);
             if (health <= 0)
                 TankDeath();
         }
 
         private void TankDeath()
         {
+            EventService.Instance.InvokeGameOver();
             TankService.Instance.DestoryTank(tankView);
         }
 
