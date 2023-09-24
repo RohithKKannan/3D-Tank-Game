@@ -177,11 +177,13 @@ namespace BattleTank.Enemy
             }
 
             enemies.Remove(_enemyController);
-            EventService.Instance.InvokeEnemyDestroy(++enemiesDestroyedCount);
             StartCoroutine(TankExplosion(pos));
 
             if (playerTransform != null)
+            {
+                EventService.Instance.InvokeEnemyDestroy(++enemiesDestroyedCount);
                 StartCoroutine(SpawnEnemyTank());
+            }
         }
 
         public IEnumerator TankExplosion(Vector3 tankPos)

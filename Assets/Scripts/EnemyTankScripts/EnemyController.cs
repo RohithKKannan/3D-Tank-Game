@@ -114,6 +114,7 @@ namespace BattleTank.Enemy
 
         public void DisableEnemyTank()
         {
+            healthBar.transform.localPosition = Vector3.zero;
             healthBar.gameObject.SetActive(false);
             enemyView.gameObject.SetActive(false);
         }
