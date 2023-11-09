@@ -31,7 +31,7 @@ namespace BattleTank.PlayerCamera
 
         public IEnumerator ZoomOut()
         {
-            while (mainCamera.orthographicSize < maxCameraSize)
+            while (mainCamera != null && mainCamera.orthographicSize < maxCameraSize)
             {
                 mainCamera.orthographicSize += offsetLevel;
                 yield return new WaitForSeconds(zoomOutSpeed);

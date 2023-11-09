@@ -24,16 +24,19 @@ namespace BattleTank.PlayerTank
         private TankController tankController;
         private TankExplosionPoolService tankExplosionPoolService;
 
+        private FixedJoystick joystick;
+        private CameraController mainCamera;
+
         [SerializeField] private TankScriptableObjectList playerTankList;
-        [SerializeField] private FixedJoystick joystick;
-        [SerializeField] private CameraController mainCamera;
         [SerializeField] private ParticleSystem tankExplosion;
 
         [Header("Distance achievement")]
         [SerializeField] private int[] distanceCheckpoints;
 
-        private void Start()
+        public void StartTankService(FixedJoystick _joystick, CameraController _camera)
         {
+            joystick = _joystick;
+            mainCamera = _camera;
             bulletCount = 0;
             tankExplosionPoolService = new TankExplosionPoolService();
             CreatePlayerTank(UnityEngine.Random.Range(0, playerTankList.tanks.Length));

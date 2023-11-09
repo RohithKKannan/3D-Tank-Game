@@ -9,15 +9,16 @@ namespace BattleTank.Level
 {
     public class LevelService : GenericSingleton<LevelService>
     {
-        private TankExplosionPoolService explosionPoolService;
+        private TankExplosionPoolService explosionPoolService = new();
+        private GameObject[] entities;
+        private CameraController cameraController;
 
-        [SerializeField] private GameObject[] entities;
         [SerializeField] private ParticleSystem explosionEffect;
-        [SerializeField] private CameraController cameraController;
 
-        private void Start()
+        public void StartLevelService(GameObject[] _entities, CameraController _camera)
         {
-            explosionPoolService = new TankExplosionPoolService();
+            entities = _entities;
+            cameraController = _camera;
         }
 
         public IEnumerator DestroyLevel()
