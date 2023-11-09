@@ -2,6 +2,7 @@ using UnityEngine;
 using BattleTank.ScriptableObjects;
 using BattleTank.PlayerCamera;
 using BattleTank.Events;
+using Utilities;
 
 namespace BattleTank.PlayerTank
 {
@@ -64,7 +65,10 @@ namespace BattleTank.PlayerTank
         public void TakeDamage(int damage)
         {
             health -= damage;
-            EventService.Instance.InvokeSetPlayerHealthBar(health);
+
+            float healthToDisplay = UtilityService.ConvertToNewRange(health, 0, tankModel.health, 0, 1);
+
+            EventService.Instance.InvokeSetPlayerHealthBar(healthToDisplay);
             if (health <= 0)
                 TankDeath();
         }

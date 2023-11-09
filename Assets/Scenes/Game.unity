@@ -1507,13 +1507,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dec97c279a4ac17479a90e7d548d2192, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entities:
-  - {fileID: 2074760214}
-  - {fileID: 696468984}
-  - {fileID: 1274518827}
-  - {fileID: 356922861}
   explosionEffect: {fileID: 19874418, guid: ee49a9a8678ecf8468eb488e1ac8d42b, type: 3}
-  cameraController: {fileID: 1771596988}
 --- !u!4 &671707150
 Transform:
   m_ObjectHideFlags: 0
@@ -1950,6 +1944,60 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 758356617}
   m_CullTransparentMesh: 1
+--- !u!1 &779222923
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 779222925}
+  - component: {fileID: 779222924}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &779222924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 779222923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d85319f2dee7f6c4baf99bd14651853a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entities:
+  - {fileID: 2074760214}
+  - {fileID: 696468984}
+  - {fileID: 1274518827}
+  - {fileID: 356922861}
+  joystick: {fileID: 2110804881}
+  mainCamera: {fileID: 1771596988}
+  playerCamera: {fileID: 1391056263}
+  enemyUICanvas: {fileID: 148631841}
+  spawnPointParent: {fileID: 1393628838}
+--- !u!4 &779222925
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 779222923}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &819002353
 GameObject:
   m_ObjectHideFlags: 0
@@ -2114,8 +2162,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTankList: {fileID: 11400000, guid: 8e21b4ae36c4fed448252a205e171c03, type: 2}
-  joystick: {fileID: 2110804881}
-  mainCamera: {fileID: 1771596988}
   tankExplosion: {fileID: 19874418, guid: ee49a9a8678ecf8468eb488e1ac8d42b, type: 3}
   distanceCheckpoints: 1900000064000000f4010000
 --- !u!4 &857600325
@@ -5052,11 +5098,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb812dbcb9c26bb4d80b96f6ad2d1779, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCamera: {fileID: 1391056263}
-  enemyUICanvas: {fileID: 148631841}
   enemyTankList: {fileID: 11400000, guid: 42c4256e00a25044f8f99726708c7b9e, type: 2}
   tankExplosion: {fileID: 19874418, guid: ee49a9a8678ecf8468eb488e1ac8d42b, type: 3}
-  SpawnPointParent: {fileID: 1393628838}
   enemyCount: 10
 --- !u!1 &2074760214 stripped
 GameObject:

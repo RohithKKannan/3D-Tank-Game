@@ -22,7 +22,7 @@ namespace BattleTank.Events
         public event Action OnPlayerShoot;
         public event Action OnGameOver;
         public event Action<int> OnSetMaxHealthBar;
-        public event Action<int> OnSetPlayerHealthBar;
+        public event Action<float> OnSetPlayerHealthBar;
 
         public void InvokeEnemyDestroy(int enemiesDestroyedCount)
         {
@@ -54,7 +54,7 @@ namespace BattleTank.Events
             OnSetMaxHealthBar?.Invoke(maxHealth);
         }
 
-        public void InvokeSetPlayerHealthBar(int health)
+        public void InvokeSetPlayerHealthBar(float health)
         {
             OnSetPlayerHealthBar?.Invoke(health);
         }

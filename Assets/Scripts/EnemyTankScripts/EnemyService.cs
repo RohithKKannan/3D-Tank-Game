@@ -7,6 +7,7 @@ using BattleTank.Events;
 using BattleTank.ScriptableObjects;
 using BattleTank.PlayerTank;
 using BattleTank.Bullet;
+using BattleTank.PlayerCamera;
 
 namespace BattleTank.Enemy
 {
@@ -21,36 +22,34 @@ namespace BattleTank.Enemy
         private int enemiesDestroyedCount = 0;
         private Transform playerTransform;
 
-        private List<EnemyController> enemies;
-        private List<Transform> spawnPoints;
-        private List<Transform> pointsAlreadySpawned;
+        private List<EnemyController> enemies = new();
+        private List<Transform> spawnPoints = new();
+        private List<Transform> pointsAlreadySpawned = new();
 
-        private BrownEnemyPoolService brownEnemyPoolService;
-        private PurpleEnemyPoolService purpleEnemyPoolService;
-        private CyanEnemyPoolService cyanEnemyPoolService;
+        private BrownEnemyPoolService brownEnemyPoolService = new();
+        private PurpleEnemyPoolService purpleEnemyPoolService = new();
+        private CyanEnemyPoolService cyanEnemyPoolService = new();
 
-        private TankExplosionPoolService tankExplosionPoolService;
+        private TankExplosionPoolService tankExplosionPoolService = new();
 
-        [SerializeField] private Camera playerCamera;
-        [SerializeField] private Canvas enemyUICanvas;
+        private Camera playerCamera;
+        private Canvas enemyUICanvas;
+        private Transform SpawnPointParent;
+
         [SerializeField] private EnemyScriptableObjectList enemyTankList;
         [SerializeField] private ParticleSystem tankExplosion;
-        [SerializeField] private Transform SpawnPointParent;
         [SerializeField] private int enemyCount = 3;
 
-        private void Start()
+        public void StartEnemyService(Camera _playerCamera, Canvas _enemyUICanvas, Transform _spawnPointParent)
         {
-            enemies = new List<EnemyController>();
-            spawnPoints = new List<Transform>();
-            pointsAlreadySpawned = new List<Transform>();
-            brownEnemyPoolService = new BrownEnemyPoolService();
-            purpleEnemyPoolService = new PurpleEnemyPoolService();
-            cyanEnemyPoolService = new CyanEnemyPoolService();
-            tankExplosionPoolService = new TankExplosionPoolService();
+            playerCamera = _playerCamera;
+            enemyUICanvas = _enemyUICanvas;
+            SpawnPointParent = _spawnPointParent;
 
             playerTransform = TankService.Instance.GetPlayerTransform();
             enemyCount = Mathf.Min(enemyCount, maxEnemyCount);
 
+            spawnPoints.Clear();
             foreach (Transform item in SpawnPointParent)
                 spawnPoints.Add(item);
 
@@ -160,6 +159,9 @@ namespace BattleTank.Enemy
 
         public void DestoryEnemy(EnemyController _enemyController, EnemyType _enemyType)
         {
+            if (_enemyController.enemyView == null)
+                return;
+
             Vector3 pos = _enemyController.GetPosition();
             _enemyController.DisableEnemyTank();
 
@@ -195,8 +197,11 @@ namespace BattleTank.Enemy
 
             yield return new WaitForSeconds(2f);
 
-            newTankExplosion.gameObject.SetActive(false);
-            tankExplosionPoolService.ReturnItem(newTankExplosion);
+            if (newTankExplosion != null)
+            {
+                newTankExplosion.gameObject.SetActive(false);
+                tankExplosionPoolService.ReturnItem(newTankExplosion);
+            }
         }
 
         public IEnumerator DestroyAllEnemies()
@@ -210,6 +215,8 @@ namespace BattleTank.Enemy
                 DestoryEnemy(enemy, enemy.GetEnemyType());
                 yield return new WaitForSeconds(1f);
             }
+
+            enemies.Clear();
         }
     }
 }

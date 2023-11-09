@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using BattleTank.Events;
 
+[RequireComponent(typeof(Animator))]
 public class GameUIManager : MonoBehaviour
 {
     private Animator canvasAnimator;
@@ -32,8 +33,9 @@ public class GameUIManager : MonoBehaviour
         playerHealthBar.maxValue = _maxHealth;
     }
 
-    public void SetPlayerHealth(int health)
+    public void SetPlayerHealth(float health)
     {
+        Debug.Log("Set player health called for : " + health);
         playerHealthBar.value = health;
     }
 
